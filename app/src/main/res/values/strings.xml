@@ -36,4 +36,9 @@
     <string name="invert">Invert</string>
     <string name="one">1</string>
     <string name="polaroid">Polaroid</string>
+    <string name="polaroidImageButton">Image button for applying polaroid filter to the picture</string>
+    <string name="noFilterButtonDescription">Image button for deleting filters from image</string>
+    <string name="invertDescription">Image button for applying invert filter on the picture</string>
+    <string name="greyDescription">ImageButton for applying greyscale filter on the picture</string>
+    <string name="sepiaDescription">Image button for applying sepia filter on the picture</string>
 </resources>

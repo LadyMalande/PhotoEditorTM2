@@ -3,16 +3,16 @@ package com.example.photoeditortm;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 
-public class MyImage {
-    public Bitmap fullSizeBitmap;
-    public Bitmap thumbnail;
-    public Bitmap thumbnailBackup;
-    public Bitmap thumbnailWithSelectedFilter;
-    public int filter;
-    public int brightness;
-    public float contrast;
+class MyImage {
+    Bitmap fullSizeBitmap;
+    Bitmap thumbnail;
+    Bitmap thumbnailBackup;
+    Bitmap thumbnailWithSelectedFilter;
+    int filter;
+    int brightness;
+    float contrast;
 
-    public MyImage(Bitmap bitmap){
+    MyImage(Bitmap bitmap){
 
         this.fullSizeBitmap = bitmap;
         int maxHeight = TakePhotoActivity.getSizeHeightImageView();
@@ -32,15 +32,15 @@ public class MyImage {
 
     }
 
-    public Bitmap getThumbnail(){
+    Bitmap getThumbnail(){
         return thumbnail;
     }
 
-    public Bitmap getFullSizeBitmap(){
+    Bitmap getFullSizeBitmap(){
         return fullSizeBitmap;
     }
 
-    public void setFilter(int i){
+    void setFilter(int i){
         this.filter = i;
     }
 

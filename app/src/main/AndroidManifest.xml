@@ -5,6 +5,7 @@
     package="com.example.photoeditortm">
 
     <application
+        android:fullBackupContent=""
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -39,12 +40,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
     </application>
     <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
+        android:required="true"
+        tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 

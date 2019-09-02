@@ -2,6 +2,8 @@ package com.example.photoeditortm;
 
 import android.widget.SeekBar;
 
+import java.util.Locale;
+
 import static com.example.photoeditortm.TakePhotoActivity.*;
 
 public class BrightnessListener implements SeekBar.OnSeekBarChangeListener {
@@ -13,7 +15,7 @@ public class BrightnessListener implements SeekBar.OnSeekBarChangeListener {
         delta = progress - (seekBar.getMax()/2);
         myImage.brightness=delta;
         imageView.setImageBitmap(Filters.changeBitmapContrastBrightness(myImage.thumbnailWithSelectedFilter, myImage.contrast, delta));
-        brightnessNumber.setText(""+delta);
+        brightnessNumber.setText(String.format(Locale.ENGLISH, "%d", delta));
         imageView.invalidate();
     }
 

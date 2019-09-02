@@ -11,7 +11,7 @@ public class MyScanner implements MediaScannerConnectionClient {
     private MediaScannerConnection connection;
     private File file;
 
-    public MyScanner(Context context, File f) {
+    MyScanner(Context context, File f) {
         file = f;
         connection = new MediaScannerConnection(context, this);
         connection.connect();

@@ -7,7 +7,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 
-public class Filters {
+class Filters {
 
         private static int w;
         private static int h;
@@ -15,9 +15,9 @@ public class Filters {
 
     /**
          * Sets width of an image for computation purposes in some filters.
-         * @param WS Width of the image.
-         */
-        public static void setW(int WS){
+     * @param WS Width of the image.
+     */
+        private static void setW(int WS){
             w = WS;
         }
 
@@ -25,7 +25,7 @@ public class Filters {
          * Sets height of an image for computation purposes in some filters.
          * @param HS Height of the image.
          */
-        public static void setH(int HS){
+        private static void setH(int HS){
             h = HS;
         }
 
@@ -43,7 +43,7 @@ public class Filters {
         }
 
 
-    public static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float contrast, float brightness) {
+    static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float contrast, float brightness) {
 
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
@@ -64,7 +64,7 @@ public class Filters {
         return ret;
     }
 
-    public static Bitmap polaroid(Bitmap bmp) {
+    static Bitmap polaroid(Bitmap bmp) {
 
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
@@ -84,25 +84,7 @@ public class Filters {
         TakePhotoActivity.myImage.setFilter(4);
         return ret;
     }
-
-        /**
-         * Computes classic gaussian blur effect on the image.
-         */
-
-        /*
-        public static void gaussianBlur() {
-
-            float[] matrix = {1/16f, 1/8f, 1/16f, 1/8f, 1/4f, 1/8f, 1/16f, 1/8f, 1/16f};
-            BufferedImageOp BIO = new ConvolveOp(new Kernel(3,3,matrix));
-            BufferedImage after = BIO.filter((BufferedImage)getImage(), null);
-            setImage(after);
-        }*/
-
-        /**
-         * Darkens the image by wanted amount of points.
-         * @param HowMuch By how much points out of 255 should be the image burnt.
-         */
-        /*
+    /*
         public static Bitmap burn(Bitmap bitmap,int HowMuch) {
 
         changeOrder(1);
@@ -206,7 +188,7 @@ public class Filters {
         /**
          * Casts the image to greyscale.
          */
-        public static Bitmap toGrayscale(Bitmap bitmap) {
+        static Bitmap toGrayscale(Bitmap bitmap) {
 
 
             setH(bitmap.getHeight());
@@ -235,7 +217,7 @@ public class Filters {
     /**
      * Casts the image to sepia colors.
      */
-    public static Bitmap toSepia(Bitmap bitmap) {
+    static Bitmap toSepia(Bitmap bitmap) {
 
         setH(bitmap.getHeight());
         setW(bitmap.getWidth());
@@ -263,11 +245,11 @@ public class Filters {
         return bit;
     }
 
-/**
+        /**
          * Inverts all the colors in the image.
          */
 
-        public static Bitmap invert(Bitmap bitmap) {
+        static Bitmap invert(Bitmap bitmap) {
 
             setH(bitmap.getHeight());
             setW(bitmap.getWidth());
@@ -296,91 +278,4 @@ public class Filters {
             return bit;
 
         }
-
-/**
-         * Detects edges in the picture. Has 2 assigned filters.
-         * @param b Defines if the result is black on white or white on black.
-         *//*
-
-        public static void edgeDetection(boolean b) {
-            Matrix kernel = new Matrix(3,3, new float[]{
-                    0,-1,0,
-                    -1,4,-1,
-                    0,-1,0
-            });
-            BufferedImageOp BIO = new ConvolveOp(kernel);
-            BufferedImage after = BIO.filter((BufferedImage)getImage(), null);
-
-            setImage(after);
-            if (b == true){
-                invert();
-            }
-        }
-
-        */
-/**
-         * Sharpens the image with typical algorithm.
-         *//*
-
-        public static void sharpen() {
-            Kernel kernel = new Kernel(3,3, new float[]{
-                    0, -1, 0,
-                    -1, 5, -1,
-                    0, -1, 0
-            });
-            BufferedImageOp BIO = new ConvolveOp(kernel);
-            BufferedImage after = BIO.filter((BufferedImage)getImage(), null);
-
-            setImage(after);
-        }
-
-        */
-/**
-         * Makes funny color change.
-         * @param b Decides in which directions the edges are recognized.
-         *//*
-
-        public static void sobel(boolean b) {
-            BufferedImage complete;
-            if(b) {
-                Kernel kernel1 = new Kernel(3,3, new float[]{
-                        1, 2, 1,
-                        0, 0, 0,
-                        -1, -2, -1
-                });
-                BufferedImageOp BIO1 = new ConvolveOp(kernel1);
-                BufferedImage after = BIO1.filter((BufferedImage)getImage(), null);
-                complete = BIO1.filter(after, null);
-            } else {
-                Kernel kernel2 = new Kernel(3,3, new float[]{
-                        1,0,-1,
-                        2,0,-2,
-                        1,0,-1
-                });
-                BufferedImageOp BIO2 = new ConvolveOp(kernel2);
-                BufferedImage after = BIO2.filter((BufferedImage)getImage(), null);
-                complete = BIO2.filter(after, null);
-            }
-            setImage(complete);
-        }
-
-        */
-/**
-         * Blurs the image and lightens it, making and impression of flash.
-         *//*
-
-        public static void flash() {
-            Kernel kernel = new Kernel(5,5,new float[] {
-                    0, 0, -0.5F, 0, 0,
-                    0, 0, -0.5F, 0, 0,
-                    0, 0, 1, 0, 0,
-                    0, 0.5F, 0, 0.5F, 0,
-                    0.5F, 0, 0, 0, 0.5F,
-            });
-            BufferedImageOp BIO2 = new ConvolveOp(kernel);
-            BufferedImage after = BIO2.filter((BufferedImage)getImage(), null);
-            setImage(after);
-        }
-*/
-
 }

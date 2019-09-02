@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //set Listener on button1 for starting new Activity with photo value
+        //set Listener on button1 for starting new Activity
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -23,16 +23,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(activity2Intent);
             }
         });
-/*
-        Button button_about = findViewById(R.id.button_about);
-        button_about.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent activity3Intent = new Intent(getApplicationContext(), About.class);
-                startActivity(activity3Intent);
-            }
-        });
-*/
-
     }
 
     public void startAboutActivity(View v){
