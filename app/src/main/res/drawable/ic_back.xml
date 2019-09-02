@@ -1,0 +1,5 @@
+<vector android:height="24dp" android:viewportHeight="492.425"
+    android:viewportWidth="492.425" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"                 title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+    <path android:fillColor="#FF000000" android:pathData="M228.398,137.833V92.355c0.008,-9.697 -5.364,-18.611 -13.946,-23.123c-8.576,-4.529 -18.959,-3.935 -26.964,1.541L10.172,192.148C3.821,196.497 0.014,203.679 0,211.369c-0.025,7.692 3.733,14.903 10.052,19.286l177.283,122.947c7.99,5.559 18.405,6.201 27.02,1.688c8.623,-4.512 14.019,-13.424 14.027,-23.156v-38.301c93.167,2.682 174.585,50.617 221.525,122.049c5.484,8.334 15.963,12.189 25.775,9.475c9.805,-2.713 16.629,-11.371 16.726,-21.262c0.009,-0.885 0.017,-1.768 0.017,-2.65C492.425,258.31 374.944,142.091 228.398,137.833z"/>
+</vector>

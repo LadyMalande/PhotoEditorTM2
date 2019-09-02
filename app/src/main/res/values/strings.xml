@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">PhotoEditorTM</string>
+    <string name="MainActivityButton1Label">Take a photo!</string>
+    <string name="MainActivityButton2Label">Browse your gallery!</string>
+    <string name="grey">Grey</string>
+    <string name="sepia">Sepia</string>
+    <string name="descriptionBack">Button for going back to main menu</string>
+    <string name="descriptionContrast">Button for showing sliders to adjust brightness and contrast</string>
+    <string name="descriptionSave">Button for saving the image</string>
+    <string name="descriptionFilters">Button for showing filter miniatures</string>
+    <string name="contrastImage">Image of contrast symbol</string>
+    <string name="brightnessImage">Image of brightness symbol</string>
+    <string name="cameraButton">Button for starting camera to take a pohoto</string>
+    <string name="let_s_start">Let\'s start!</string>
+    <string name="photoeditortm">Photo Editor</string>
+    <string name="byTM">by Tereza Miklosova</string>
+    <string name="descriptionfrontpage">Decorative icon of main page of this program</string>
+    <string name="about">About</string>
+    <string name="resources">Resources credits</string>
+    <string name="icons">Icons</string>
+    <string name="logo_and_portrait_on_the_start_page">Logo and portrait on the start page</string>
+    <string name="special_font">Special font</string>
+    <string name="about_the_app">About the app</string>
+    <string name="myWebPage"><a href="https://www.deviantart.com/ladymalande">LadyMalande on DeviantArt</a></string>
+    <string name="freepik"><a href="https://www.flaticon.com/authors/freepik\" title="Freepik\">Freepik</a> from <a href="https://www.flaticon.com/">flaticon.com </a></string>
+    <string name="billyArgel">Billy Argel on <a href="https://www.billyargel.com">billyargel.com</a> </string>
+    <string name="about_text">This app has been created as a credit project of class Advanced programming in Java on the Charles University in Prague by Tereza Miklosova.
+
+
+    </string>
+    <string name="general_introcudtion">It should be used as a tool for small changes in photos such as filter usage or change of brightness or contrast.</string>
+    <string name="whatTheAppDoes">When you take a photo with this app, your default camera tool saves the image taken. So if you do not like the changes you make, you can always start anew. But if you do not want your backup photo, you have to delete it manually.</string>
+    <string name="havefun">Have fun using this app!</string>
+    <string name="zero">0</string>
+    <string name="no_filter">No filter</string>
+    <string name="invert">Invert</string>
+    <string name="one">1</string>
+    <string name="polaroid">Polaroid</string>
+</resources>

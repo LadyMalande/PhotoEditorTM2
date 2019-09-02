@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/grey"
+        app:layout_constraintBottom_toTopOf="@id/scroll_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutButtonsTop"></ImageView>
+
+
+    <LinearLayout
+        android:id="@+id/layoutSliders"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#E5EDBA"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scroll_view"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="@+id/scroll_view"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.666">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView_brightnessNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/zero"
+                app:layout_constraintBottom_toTopOf="@id/textView_contrastNumber"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/seekBar_brightness"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_contrastNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/one"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/seekBar_contrast"
+                app:layout_constraintTop_toBottomOf="@+id/textView_brightnessNumber" />
+
+            <ImageView
+                android:id="@+id/imageView_contrast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:contentDescription="@string/contrastImage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/seekBar_contrast"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_brightness"
+                app:srcCompat="@drawable/ic_hue" />
+
+            <ImageView
+                android:id="@+id/imageView_brightness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/brightnessImage"
+                app:layout_constraintBottom_toTopOf="@+id/imageView_contrast"
+                app:layout_constraintEnd_toStartOf="@+id/seekBar_brightness"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_brightness" />
+
+            <SeekBar
+                android:id="@+id/seekBar_contrast"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:max="1000"
+
+                android:progress="100"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/textView_contrastNumber"
+
+
+                app:layout_constraintStart_toEndOf="@id/imageView_contrast"
+                app:layout_constraintTop_toBottomOf="@+id/seekBar_brightness" />
+
+            <SeekBar
+                android:id="@+id/seekBar_brightness"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:max="510"
+                android:progress="255"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/seekBar_contrast"
+                app:layout_constraintEnd_toStartOf="@id/textView_brightnessNumber"
+                app:layout_constraintStart_toEndOf="@id/imageView_brightness"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/colorButtonNormal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+        <LinearLayout
+            android:id="@+id/linearLayout_Filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/textView_noFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/no_filter" />
+
+                <ImageButton
+                    android:id="@+id/filter_button_noFilter"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:onClick="DoNoFilter"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/textView_grey"
+                    android:layout_width="30dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:text="@string/grey"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/filter_Button_grey"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:onClick="DoGrey"
+                    android:text="@string/grey"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/textView_sepia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:text="@string/sepia" />
+
+                <ImageButton
+                    android:id="@+id/filter_Button_sepia"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="DoSepia"
+                    android:text="@string/sepia"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/textView_invert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/invert" />
+
+                <ImageButton
+                    android:id="@+id/filter_Button_invert"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:onClick="DoInvert"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/textView_polaroid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/polaroid" />
+
+                <ImageButton
+                    android:id="@+id/filter_Button_polaroid"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:onClick="DoPolaroid"
+
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/layoutButtonsTop"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/design_default_color_primary_dark"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/imageButton_gallery"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorButtonNormal"
+            android:contentDescription="@string/descriptionBack"
+            android:onClick="prepareForGallery"
+            app:srcCompat="@drawable/ic_open_file_button" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="?attr/colorButtonNormal"
+            android:contentDescription="@string/cameraButton"
+            android:onClick="prepareForPhoto"
+            app:srcCompat="@drawable/ic_camera" />
+
+        <ImageButton
+            android:id="@+id/imageButton_contrast"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorButtonNormal"
+            android:contentDescription="@string/descriptionContrast"
+            android:onClick="MakeVisibleFilters"
+            app:srcCompat="@drawable/ic_magic_wand" />
+
+        <ImageButton
+            android:id="@+id/imageButton_filters"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorButtonNormal"
+            android:contentDescription="@string/descriptionFilters"
+            android:onClick="MakeVisibleContrast"
+            app:srcCompat="@drawable/ic_contrast" />
+
+        <ImageButton
+            android:id="@+id/imageButton_Save"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorButtonNormal"
+            android:contentDescription="@string/descriptionSave"
+            android:onClick="saveImage"
+            app:srcCompat="@drawable/ic_save" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
