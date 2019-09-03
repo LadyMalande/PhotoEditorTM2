@@ -3,11 +3,16 @@ package com.example.photoeditortm;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ *
+ */
 public class About extends AppCompatActivity {
-
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
