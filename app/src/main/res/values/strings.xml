@@ -41,4 +41,5 @@
     <string name="invertDescription">Image button for applying invert filter on the picture</string>
     <string name="greyDescription">ImageButton for applying greyscale filter on the picture</string>
     <string name="sepiaDescription">Image button for applying sepia filter on the picture</string>
+    <string name="photo_taken_on">Photo taken on: </string>
 </resources>

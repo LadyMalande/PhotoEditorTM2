@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:ignore="UselessParent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/textView_Top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:text="@string/about_the_app"
+                android:textColor="@color/design_default_color_primary_dark"
+                android:textSize="40sp"
+                app:fontFamily="@font/cute" />
+
+            <TextView
+                android:id="@+id/textView_general"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:text="@string/about_text" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/general_introcudtion" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/whatTheAppDoes" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/havefun" />
+
+            <TextView
+                android:id="@+id/textView_resourcecredits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="5dp"
+                android:text="@string/resources"
+                android:textColor="@color/design_default_color_primary_dark"
+                android:textSize="30sp"
+                app:fontFamily="@font/cute" />
+
+            <TextView
+                android:id="@+id/textView_icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/icons"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                app:fontFamily="@font/cute" />
+
+            <TextView
+                android:id="@+id/textView_tagofArtist1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="5dp"
+                android:text="@string/freepik"
+                android:textColorLink="@color/design_default_color_primary_dark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView_LogoPortrait"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="5dp"
+                android:text="@string/logo_and_portrait_on_the_start_page"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                app:fontFamily="@font/cute" />
+
+            <TextView
+                android:id="@+id/textView_me"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/myWebPage"
+                android:textColorLink="@color/design_default_color_primary_dark"
+
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="5dp"
+                android:text="@string/special_font"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                app:fontFamily="@font/cute" />
+
+            <TextView
+                android:id="@+id/textView_fontArtist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/billyArgel"
+                android:textColorLink="@color/design_default_color_primary_dark"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
