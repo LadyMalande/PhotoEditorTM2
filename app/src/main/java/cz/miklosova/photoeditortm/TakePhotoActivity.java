@@ -6,12 +6,13 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Proxy;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -38,12 +39,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class TakePhotoActivity extends AppCompatActivity {
@@ -94,23 +92,28 @@ public class TakePhotoActivity extends AppCompatActivity {
         setContentView(R.layout.editor_activity);
         ButterKnife.bind(this);
         imageView = findViewById(R.id.imageView);
+
         imageViewHeight = imageView.getHeight();
         imageViewWidth = imageView.getWidth();
-        /*
-        if (savedInstanceState != null && (savedInstanceState.getSerializable("fullSizeBitmap") != null)){
-            ProxyBitmap pb = (ProxyBitmap) savedInstanceState.getSerializable("fullSizeBitmap");
-            ProxyBitmap pbWithFilter = (ProxyBitmap) savedInstanceState.getSerializable("thumbnailWithSelectedFilter");
-            myImage = new MyImage(pb.getBitmap());
-            myImage.setThumbnailWithSelectedFilter(pbWithFilter.getBitmap());
-            myImage.setContrast(savedInstanceState.getFloat("contrast"));
-            myImage.setFilter(savedInstanceState.getInt("filter"));
-            myImage.setBrightness(savedInstanceState.getInt("brightness"));
-            myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
-                    myImage.getContrast(), myImage.getBrightness()));
+        if(myImage != null){
+            int filterSave = myImage.getFilter();
             imageView.setImageBitmap(myImage.getThumbnail());
+            Thread waitABit = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    try{
+                        Thread.sleep(100);
+                        preparePreviews();
+                    } catch (Exception e){
+                        Log.e(TAG, "bad thread sleep before preparePreviews");
+                    }
+                }
+            });
+            waitABit.start();
+            myImage.setFilter(filterSave);
             imageView.invalidate();
+            imageView.postInvalidate();
         }
-        */
 
         seekBar_brightness.setOnSeekBarChangeListener(new BrightnessListener());
         brightnessNumber = findViewById(cz.miklosova.photoeditortm.R.id.textView_brightnessNumber);
@@ -207,7 +210,7 @@ public class TakePhotoActivity extends AppCompatActivity {
                 stream.close();
                 // Parse the gallery image url to uri
                 new MyScanner(this, file);
-                // Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath()); 
+                // Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
 
 
                 BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -221,6 +224,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
                 //we have the input stream, we get the bitmap from it
                 myImage = new MyImage(BitmapFactory.decodeFile(file.getAbsolutePath(), opts2));
+
                 preparePreviews();
                 file.delete();
                 imageView.setImageBitmap(myImage.getThumbnail());
@@ -282,16 +286,48 @@ public class TakePhotoActivity extends AppCompatActivity {
         int widthOfPreviewButton = filterButton_noFilter.getWidth();
         int heightOfPreviewButton = filterButton_noFilter.getHeight();
 
-        Bitmap previewClear;
-        previewClear = Bitmap.createScaledBitmap(myImage.getThumbnail(), widthOfPreviewButton, heightOfPreviewButton, true);
 
-        filterButton_noFilter.setImageBitmap(previewClear);
+
+        Bitmap previewClear;
+        previewClear = Bitmap.createScaledBitmap(myImage.getThumbnailBackup(), widthOfPreviewButton, heightOfPreviewButton, true);
+
+
+
+        new ImageFilterTask().execute(previewClear);
+        /*
         filterButton_grey.setImageBitmap(Filters.toGrayscale(previewClear));
         filterButton_sepia.setImageBitmap(Filters.toSepia(previewClear));
         filterButton_invert.setImageBitmap(Filters.invert(previewClear));
         filterButton_polaroid.setImageBitmap(Filters.polaroid(previewClear));
-
+        */
         myImage.setFilter(0);
+    }
+
+    class ImageFilterTask extends AsyncTask<Bitmap, Void, Bitmap[]> {
+        @Override
+        protected Bitmap[] doInBackground(Bitmap... bitmaps) {
+            Bitmap[] bitmapArray = new Bitmap[5];
+            bitmapArray[0] = Filters.toGrayscale(bitmaps[0]);
+            bitmapArray[1] = Filters.toSepia(bitmaps[0]);
+            bitmapArray[2] = Filters.invert(bitmaps[0]);
+            bitmapArray[3] = Filters.polaroid(bitmaps[0]);
+            bitmapArray[4] = bitmaps[0];
+            return bitmapArray;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap[] bitmap) {
+            if (isCancelled()) {
+                bitmap = null;
+            } else {
+                filterButton_grey.setImageBitmap(bitmap[0]);
+                filterButton_sepia.setImageBitmap(bitmap[1]);
+                filterButton_invert.setImageBitmap(bitmap[2]);
+                filterButton_polaroid.setImageBitmap(bitmap[3]);
+                filterButton_noFilter.setImageBitmap(bitmap[4]);
+            }
+
+        }
     }
 
     private int calculateSampleSize(int w, int h) {
@@ -407,24 +443,22 @@ public class TakePhotoActivity extends AppCompatActivity {
         imageButton_save.setClickable(false);
 
         modifyFullSizeBitmap(view);
-
-        File dir = getPublicAlbumStorageDir("PhotoEditorTM");
-
-
-        // Create a file to save the image
-        File file;
         try {
-            if (Build.VERSION.SDK_INT >= 26) {
-                //file = File.createTempFile(createImageNameNewerSDK(), ".jpg", dir);
-                file = File.createTempFile(createImageNameNewerSDK(), ".jpg", dir);
-                Toast.makeText(this, createImageNameNewerSDK(), Toast.LENGTH_LONG).show();
+
+        File file;
+        // Create a file to save the image
+
+
+
+            if (android.os.Build.VERSION.SDK_INT >= 26) {
+                file = File.createTempFile(createImageName(), ".jpg", this.getFilesDir());
+
             } else {
-                //file = File.createTempFile(createImageName(), ".jpg", dir);
+                File dir = getPublicAlbumStorageDir("PhotoEditorTM");
                 file = File.createTempFile(createImageName(), ".jpg", dir);
-                Toast.makeText(this, createImageName(), Toast.LENGTH_LONG).show();
             }
 
-
+            file.mkdir();
             FileOutputStream stream;
             stream = new FileOutputStream(file);
             myImage.getFullSizeBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -434,10 +468,24 @@ public class TakePhotoActivity extends AppCompatActivity {
             // Parse the gallery image url to uri
             Uri savedImageURI = Uri.parse(file.getAbsolutePath());
 
-            new MyScanner(getApplicationContext(), file);
-            Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
+            MediaScannerConnection.scanFile(TakePhotoActivity.this,
+                    new String[]{file.getAbsolutePath()},
+                    null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String s, Uri uri) {
 
-            // Display saved image uri to TextView
+                        }
+                    });
+            Toast.makeText(TakePhotoActivity.this, "scan complete", Toast.LENGTH_SHORT).show();
+
+//sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, savedImageURI));
+             //       MyScanner ms = new MyScanner(TakePhotoActivity.this, file);
+             //       ms.scan();
+             //       Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
+
+                    // Display saved image uri to TextView
+                    //Toast.makeText(this, savedImageURI.toString(), Toast.LENGTH_LONG).show();
             Toast.makeText(this, savedImageURI.toString(), Toast.LENGTH_LONG).show();
 
         }
@@ -477,10 +525,10 @@ public class TakePhotoActivity extends AppCompatActivity {
         slidersLayout.setVisibility(View.VISIBLE);
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            HorizontalScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view);
+            HorizontalScrollView scrollView = findViewById(R.id.scroll_view);
             scrollView.setVisibility(View.INVISIBLE);
         } else {
-            ScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view);
+            ScrollView scrollView = findViewById(R.id.scroll_view_land);
             scrollView.setVisibility(View.INVISIBLE);
         }
     }
@@ -489,10 +537,10 @@ public class TakePhotoActivity extends AppCompatActivity {
         slidersLayout.setVisibility(View.INVISIBLE);
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view);
+            HorizontalScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view);
             scrollView.setVisibility(View.VISIBLE);
         } else {
-            ScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view);
+            ScrollView scrollView = findViewById(cz.miklosova.photoeditortm.R.id.scroll_view_land);
             scrollView.setVisibility(View.VISIBLE);
         }
     }
@@ -502,6 +550,34 @@ public class TakePhotoActivity extends AppCompatActivity {
         imageButton_contrast.setEnabled(b);
         imageButton_save.setEnabled(b);
         LLfilters.setVisibility(visibility);
+    }
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
 }

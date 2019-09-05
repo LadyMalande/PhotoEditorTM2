@@ -10,19 +10,24 @@ public class MyScanner implements MediaScannerConnectionClient {
 
     private MediaScannerConnection connection;
     private File file;
+    private String mPath;
 
     MyScanner(Context context, File f) {
         file = f;
+        mPath = f.getAbsolutePath();
         connection = new MediaScannerConnection(context, this);
-        connection.connect();
-    }
 
+    }
     @Override
     public void onMediaScannerConnected() {
 
-        connection.scanFile(file.getAbsolutePath(), null);
+        connection.scanFile(file.toString(), "image/jpeg");
     }
 
+    public void scan() {
+        connection.connect();
+
+    }
     @Override
     public void onScanCompleted(String path, Uri uri) {
         connection.disconnect();
