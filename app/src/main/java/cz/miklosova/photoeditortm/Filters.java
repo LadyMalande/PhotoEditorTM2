@@ -22,6 +22,12 @@ class Filters {
             }
         }
 
+    /**
+     * This method creates brightness/contrast ColorMatrix.
+      * @param contrast What contrast value should be applied.
+     * @param brightness What brightness value should be applied.
+     * @return Returns the complete matrix.
+     */
     private static ColorMatrix createColorMatrix(float contrast, float brightness) {
             return new ColorMatrix(new float[]{
                   contrast, 0, 0, 0, brightness,
@@ -31,6 +37,13 @@ class Filters {
           });
     }
 
+    /**
+     * This method handles the change of brightness and contrast in a bitmap.
+     * @param bmp What bitmap should be affected.
+     * @param contrast What contrast value should be applied.
+     * @param brightness What brightness value should be applied.
+     * @return Returns the filtered Bitmap.
+     */
     static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float contrast, float brightness) {
         Bitmap ret = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
@@ -43,6 +56,11 @@ class Filters {
         return ret;
     }
 
+    /**
+     * This method applies polaroid filter to Bitmap.
+     * @param bmp What bitmap should be affected.
+     * @return Returns the filtered Bitmap.
+     */
     static Bitmap polaroid(Bitmap bmp) {
         final ColorMatrix POLAROID_MATRIX = new ColorMatrix(new float[]
                 {
@@ -63,9 +81,12 @@ class Filters {
         return ret;
     }
 
+
     /**
-    * Casts the image to greyscale.
-    */
+     * Casts the image to greyscale.
+     * @param bitmap What bitmap should be affected.
+     * @return Returns the filtered Bitmap.
+     */
     static Bitmap toGrayscale(Bitmap bitmap) {
     int w = bitmap.getWidth();
     int h = bitmap.getHeight();
@@ -90,6 +111,8 @@ class Filters {
 
     /**
      * Casts the image to sepia colors.
+     * @param bitmap What bitmap should be affected.
+     * @return Returns the filtered Bitmap.
      */
     static Bitmap toSepia(Bitmap bitmap) {
         int w = bitmap.getWidth();
@@ -116,7 +139,9 @@ class Filters {
     }
 
     /**
-     * Inverts all the colors in the image.
+     * Inverts all the colors in the Bitmap.
+     * @param bitmap What bitmap should be affected.
+     * @return Returns the filtered Bitmap.
      */
     static Bitmap invert(Bitmap bitmap) {
         int w = bitmap.getWidth();

@@ -1,15 +1,17 @@
 package cz.miklosova.photoeditortm;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * This class is the one that starts the app. It provides just two buttons.
+ * One to get to photo editor and one to read credits of the app.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.button) Button button;

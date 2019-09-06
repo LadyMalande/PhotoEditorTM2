@@ -6,17 +6,17 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 
+/**
+ * This class should scan the image to be visible in gallery.
+ */
 public class MyScanner implements MediaScannerConnectionClient {
 
     private MediaScannerConnection connection;
     private File file;
-    private String mPath;
 
     MyScanner(Context context, File f) {
         file = f;
-        mPath = f.getAbsolutePath();
         connection = new MediaScannerConnection(context, this);
-
     }
     @Override
     public void onMediaScannerConnected() {

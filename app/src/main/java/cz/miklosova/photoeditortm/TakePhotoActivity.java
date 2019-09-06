@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,10 +39,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * This activity provides most of the functionality of the app.
+ * It takes the layout with filter buttons and contrast sliders and shows thumbnail with changes to user.
+ */
 public class TakePhotoActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_GALLERY = 20;
@@ -61,9 +63,13 @@ public class TakePhotoActivity extends AppCompatActivity {
     public static int imageViewHeight;
     private Uri imageUri;
 
+    /**
+     * An object which holds all the needed data to manipulate the Bitmap.
+     */
     public static MyImage myImage;
 
 
+    // assigning components which will be needed by this class
     @BindView(R.id.seekBar_brightness) SeekBar seekBar_brightness;
     @BindView(R.id.seekBar_contrast) SeekBar seekBar_contrast;
     @BindView(R.id.filter_button_noFilter) ImageButton filterButton_noFilter;
@@ -76,8 +82,20 @@ public class TakePhotoActivity extends AppCompatActivity {
     @BindView(R.id.imageButton_contrast) ImageButton imageButton_contrast;
     @BindView(R.id.imageButton_Save) ImageButton imageButton_save;
     @BindView(R.id.linearLayout_Filters) LinearLayout LLfilters;
+
+    /**
+     * The main ImageView of this activity. It shows the thumbnail with applied filters and contrast changes.
+     */
     public static ImageView imageView;
+
+    /**
+     * This TextView shows the parameter of brightness.
+     */
     public static TextView brightnessNumber;
+
+    /**
+     * This TextView shows the parameter of contrast.
+     */
     public static TextView contrastNumber;
 
 
@@ -116,42 +134,41 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
 
         seekBar_brightness.setOnSeekBarChangeListener(new BrightnessListener());
+        seekBar_contrast.setOnSeekBarChangeListener(new ContrastListener());
         brightnessNumber = findViewById(cz.miklosova.photoeditortm.R.id.textView_brightnessNumber);
         contrastNumber = findViewById(cz.miklosova.photoeditortm.R.id.textView_contrastNumber);
-
-        seekBar_contrast.setOnSeekBarChangeListener(new ContrastListener());
-    }
-/*
-    @Override
-    protected void onSaveInstanceState(Bundle thisBundle) {
-        super.onSaveInstanceState(thisBundle);
-        if (myImage != null) {
-            ProxyBitmap pb = new ProxyBitmap(myImage.getFullSizeBitmap());
-            ProxyBitmap pbWithFilter = new ProxyBitmap(myImage.getThumbnailWithSelectedFilter());
-            thisBundle.putSerializable("fullSizeBitmap", pb);
-            thisBundle.putSerializable("thumbnailWithSelectedFilter", pbWithFilter);
-            thisBundle.putInt("brightness", myImage.getBrightness());
-            thisBundle.putFloat("contrast", myImage.getContrast());
-            thisBundle.putInt("filter", myImage.getFilter());
-        }
     }
 
-*/
-
+    /**
+     * Gives the width of imageView.
+     * @return Returns the width of imageView.
+     */
     public static int getSizeWidthImageView() {
         return imageView.getWidth();
     }
 
+    /**
+     * Gives the height of imageView.
+     * @return Returns the height of imageView.
+     */
     public static int getSizeHeightImageView() {
         return imageView.getHeight();
     }
 
+    /**
+     * Creates unique name for the file to be saved.
+     * @return String of created name.
+     */
     private String createImageName() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         return "JPEG_" + timeStamp;
     }
 
+    /**
+     * Creates unique string value for the file name. Only for newer APIs because of DateTimeFormatter.
+     * @return String of created name.
+     */
     @TargetApi(26)
     private String createImageNameNewerSDK(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss", Locale.US);
@@ -160,6 +177,10 @@ public class TakePhotoActivity extends AppCompatActivity {
         return "JPEG_NEW" + f;
     }
 
+    /**
+     * Starts the intent to take an image with camera.
+     * @param view Which View started this.
+     */
     public void prepareForPhoto(View view) {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, PHOTO_TITLE);
@@ -173,6 +194,10 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Starts the intent to browse the gallery.
+     * @param view Which View started this.
+     */
     public void prepareForGallery(View view) {
         //invoke the image gallery
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -190,6 +215,23 @@ public class TakePhotoActivity extends AppCompatActivity {
         startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
     }
 
+    /**
+     * This method is called to avoid graphical confusion wheteher the brightness/contrast filters
+     * were already applied after loading new image.
+     */
+    private void resetSeekBars(){
+        seekBar_brightness.setProgress(255);
+        seekBar_contrast.setProgress(100);
+        brightnessNumber.setText(this.getString(R.string.zero));
+        contrastNumber.setText(this.getString(R.string.one));
+    }
+
+    /**
+     * This method handles the results of Intents we start with gallery or camera.
+     * @param requestCode What intent was supposed to happen.
+     * @param resultCode If the intent ended successfully or not.
+     * @param data What Intent is this about.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -197,10 +239,11 @@ public class TakePhotoActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // image successfully taken by the camera
             try {
+                resetSeekBars();
                 enableAllEditorButtons(true, 0);
 
                 ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
-                File file = wrapper.getDir("PhotosTakenWithPETM", MODE_PRIVATE);
+                File file = wrapper.getDir(this.getString(R.string.image_taken_with_petm), MODE_PRIVATE);
                 // Create a file to save the image
                 file = new File(file, FILE_TITLE);
                 OutputStream stream;
@@ -208,10 +251,8 @@ public class TakePhotoActivity extends AppCompatActivity {
                 MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri).compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 stream.flush();
                 stream.close();
-                // Parse the gallery image url to uri
-                new MyScanner(this, file);
-                // Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
 
+                new MyScanner(this, file);
 
                 BitmapFactory.Options opts = new BitmapFactory.Options();
                 opts.inJustDecodeBounds = true;
@@ -238,9 +279,12 @@ public class TakePhotoActivity extends AppCompatActivity {
                 Log.e(TAG, "NullPointerException in onActivityResult REQUEST_IMAGE_CAPTURE");
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED) {
+            // Don't enable buttons, something went wrong.
             enableAllEditorButtons(false, 4);
 
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+            resetSeekBars();
+            // Enable the buttons, we will get the Bitmap
             enableAllEditorButtons(true, 0);
             //image chosen successfully from gallery
             Uri imageURI = data.getData();
@@ -282,28 +326,31 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method computes the preview thumnails which are to be set on the ImageButtons of filters.
+     */
     private void preparePreviews() {
         int widthOfPreviewButton = filterButton_noFilter.getWidth();
         int heightOfPreviewButton = filterButton_noFilter.getHeight();
 
-
-
         Bitmap previewClear;
         previewClear = Bitmap.createScaledBitmap(myImage.getThumbnailBackup(), widthOfPreviewButton, heightOfPreviewButton, true);
 
-
-
         new ImageFilterTask().execute(previewClear);
-        /*
-        filterButton_grey.setImageBitmap(Filters.toGrayscale(previewClear));
-        filterButton_sepia.setImageBitmap(Filters.toSepia(previewClear));
-        filterButton_invert.setImageBitmap(Filters.invert(previewClear));
-        filterButton_polaroid.setImageBitmap(Filters.polaroid(previewClear));
-        */
+
         myImage.setFilter(0);
     }
 
+    /**
+     * This class helps to load preview bitmaps on buttons more smoothly.
+     */
     class ImageFilterTask extends AsyncTask<Bitmap, Void, Bitmap[]> {
+
+        /**
+         * This method is started with ImageFilterTask.execute and is computing bitmap values for ImageButtons
+         * @param bitmaps Actually we want to send just one bitmap and that is previewClear
+         * @return We return an array with all the computed previews.
+         */
         @Override
         protected Bitmap[] doInBackground(Bitmap... bitmaps) {
             Bitmap[] bitmapArray = new Bitmap[5];
@@ -315,6 +362,10 @@ public class TakePhotoActivity extends AppCompatActivity {
             return bitmapArray;
         }
 
+        /**
+         * We set the bitmaps on their ImageButtons if everything was ok.
+         * @param bitmap We take the result from doInBackground.
+         */
         @Override
         protected void onPostExecute(Bitmap[] bitmap) {
             if (isCancelled()) {
@@ -326,10 +377,15 @@ public class TakePhotoActivity extends AppCompatActivity {
                 filterButton_polaroid.setImageBitmap(bitmap[3]);
                 filterButton_noFilter.setImageBitmap(bitmap[4]);
             }
-
         }
     }
 
+    /**
+     * This method calculates the scale which should be used to make a reasonable-sized bitmap.
+     * @param w Width of the original bitmap.
+     * @param h Height of the original bitamp.
+     * @return Returns the int value of winning scale number.
+     */
     private int calculateSampleSize(int w, int h) {
         int scaleOfWidth;
         scaleOfWidth = 2;
@@ -342,6 +398,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             rest = w / scaleOfWidth;
             scaleOfWidth++;
         }
+
         int scaleOfHeight;
         scaleOfHeight = 2;
         rest = h / scaleOfHeight;
@@ -359,7 +416,12 @@ public class TakePhotoActivity extends AppCompatActivity {
         return biggerScale;
     }
 
+    /**
+     * Method for greyscale button to start thumbnail change and myImage variables change.
+     * @param view which view sent this method
+     */
     public void DoGrey(View view) {
+        // if it was started by preview filter button, just change the thumbnail and variables in myImage
         if (view.getId() == cz.miklosova.photoeditortm.R.id.filter_Button_grey) {
             myImage.setThumbnailWithSelectedFilter(Filters.toGrayscale(myImage.getThumbnailBackup()));
             myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
@@ -367,11 +429,17 @@ public class TakePhotoActivity extends AppCompatActivity {
             imageView.setImageBitmap(myImage.getThumbnail());
             imageView.invalidate();
         } else {
+            // if it was sent by anything other, it must have been the save button, so modify the fullsizebitmap
             myImage.setFullSizeBitmap(Filters.toGrayscale(myImage.getFullSizeBitmap()));
         }
     }
 
+    /**
+     * Method for sepia button to start thumbnail change and myImage variables change.
+     * @param view which view sent this method
+     */
     public void DoSepia(View view) {
+        // if it was started by preview filter button, just change the thumbnail and variables in myImage
         if (view.getId() == cz.miklosova.photoeditortm.R.id.filter_Button_sepia) {
             myImage.setThumbnailWithSelectedFilter(Filters.toSepia(myImage.getThumbnailBackup()));
             myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
@@ -379,11 +447,17 @@ public class TakePhotoActivity extends AppCompatActivity {
             imageView.setImageBitmap(myImage.getThumbnail());
             imageView.invalidate();
         } else {
+            // if it was sent by anything other, it must have been the save button, so modify the fullsizebitmap
             myImage.setFullSizeBitmap(Filters.toSepia(myImage.getFullSizeBitmap()));
         }
     }
 
+    /**
+     * Method for invert button to start thumbnail change and myImage variables change.
+     * @param view which view sent this method
+     */
     public void DoInvert(View view) {
+        // if it was started by preview filter button, just change the thumbnail and variables in myImage
         if (view.getId() == cz.miklosova.photoeditortm.R.id.filter_Button_invert) {
             myImage.setThumbnailWithSelectedFilter(Filters.invert(myImage.getThumbnailBackup()));
             myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
@@ -391,11 +465,17 @@ public class TakePhotoActivity extends AppCompatActivity {
             imageView.setImageBitmap(myImage.getThumbnail());
             imageView.invalidate();
         } else {
+            // if it was sent by anything other, it must have been the save button, so modify the fullsizebitmap
             myImage.setFullSizeBitmap(Filters.invert(myImage.getFullSizeBitmap()));
         }
     }
 
+    /**
+     * Method for polaroid button to start thumbnail change and myImage variables change.
+     * @param view which view sent this method
+     */
     public void DoPolaroid(View view) {
+        // if it was started by preview filter button, just change the thumbnail and variables in myImage
         if (view.getId() == cz.miklosova.photoeditortm.R.id.filter_Button_polaroid) {
             myImage.setThumbnailWithSelectedFilter(Filters.polaroid(myImage.getThumbnailBackup()));
             myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
@@ -403,10 +483,15 @@ public class TakePhotoActivity extends AppCompatActivity {
             imageView.setImageBitmap(myImage.getThumbnail());
             imageView.invalidate();
         } else {
+            // if it was sent by anything other, it must have been the save button, so modify the fullsizebitmap
             myImage.setFullSizeBitmap(Filters.polaroid(myImage.getFullSizeBitmap()));
         }
     }
 
+    /**
+     * Method for no filter button to start thumbnail change and myImage variables change.
+     * @param view which view sent this method
+     */
     public void DoNoFilter(View view) {
         myImage.setThumbnailWithSelectedFilter(myImage.getThumbnailBackup());
         myImage.setThumbnail(Filters.changeBitmapContrastBrightness(myImage.getThumbnailWithSelectedFilter(),
@@ -416,12 +501,19 @@ public class TakePhotoActivity extends AppCompatActivity {
         myImage.setFilter(0);
     }
 
-    /* Checks if external storage is available for read and write */
+    /**
+     * Checks if external storage is available for read and write
+     */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    /**
+     * This method creates or just returns custom directory for photos. Works on my device of version 19, but didnt work in emulator version 29
+     * @param albumName custom album name to be used which the user will see in gallery folders
+     * @return returns the directory as File variable
+     */
     public File getPublicAlbumStorageDir(String albumName) {
         if (isExternalStorageWritable()) {
             // Get the directory for the user's public pictures directory.
@@ -438,29 +530,30 @@ public class TakePhotoActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This method does the job of saving the original-sized bitmap with all the filters and contrast to file.
+     * @param view which view started this method
+     */
     public void saveImage(View view){
-
+        // don't allow another saving in the meantime
         imageButton_save.setClickable(false);
-
+        // modify the original-sized bitmap
         modifyFullSizeBitmap(view);
         try {
-
         File file;
-        // Create a file to save the image
-
-
-
+        // Create a file to save the image. If the version of SDK is newer, we can use LocalDateTime
             if (android.os.Build.VERSION.SDK_INT >= 26) {
-                file = File.createTempFile(createImageName(), ".jpg", this.getFilesDir());
+                file = File.createTempFile(createImageNameNewerSDK(), ".jpg", this.getFilesDir());
 
             } else {
                 File dir = getPublicAlbumStorageDir("PhotoEditorTM");
                 file = File.createTempFile(createImageName(), ".jpg", dir);
             }
-
+            // make sure the file exists
             file.mkdir();
             FileOutputStream stream;
             stream = new FileOutputStream(file);
+            //compress the bitmap to the stream, then flush it to save it to the file
             myImage.getFullSizeBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream);
             stream.flush();
             stream.close();
@@ -468,26 +561,18 @@ public class TakePhotoActivity extends AppCompatActivity {
             // Parse the gallery image url to uri
             Uri savedImageURI = Uri.parse(file.getAbsolutePath());
 
+            // THIS PART DOESN'T WORK PROPERLY - it should scan the file and make a preview of it to gallery/photo directory
             MediaScannerConnection.scanFile(TakePhotoActivity.this,
                     new String[]{file.getAbsolutePath()},
                     null,
                     new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
                         public void onScanCompleted(String s, Uri uri) {
-
+                            Toast.makeText(TakePhotoActivity.this, "Scan completed.", Toast.LENGTH_SHORT).show();
                         }
                     });
-            Toast.makeText(TakePhotoActivity.this, "scan complete", Toast.LENGTH_SHORT).show();
-
-//sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, savedImageURI));
-             //       MyScanner ms = new MyScanner(TakePhotoActivity.this, file);
-             //       ms.scan();
-             //       Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
-
-                    // Display saved image uri to TextView
-                    //Toast.makeText(this, savedImageURI.toString(), Toast.LENGTH_LONG).show();
+            // Tell to the user where his image is
             Toast.makeText(this, savedImageURI.toString(), Toast.LENGTH_LONG).show();
-
         }
         catch (IOException e)
         {
@@ -497,13 +582,18 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
         catch(NullPointerException e){
             Log.e(TAG, "NullPointerException in saveImage method");
-            Toast.makeText(this, "FUCKED UP NULLPOINTEREX", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "NullPointerException during save method", Toast.LENGTH_LONG).show();
         }
+        // Make possible to save another image
         imageButton_save.setClickable(true);
     }
 
+    /**
+     * This method does filtering and brightnes/contrast changes on the fullsizebitmap.
+     * @param view which View started this method
+     */
     private void modifyFullSizeBitmap(View view) {
-
+        // we check filter value to know which filter to apply
         switch(myImage.getFilter()) {
             case FILTER_NONE: {}
             break;
@@ -516,11 +606,17 @@ public class TakePhotoActivity extends AppCompatActivity {
             case FILTER_POLAROID: DoPolaroid(view);
                 break;
         }
+        // afterwards we apply contrast and brightness
         myImage.setFullSizeBitmap((Filters.changeBitmapContrastBrightness(myImage.getFullSizeBitmap(),
                 myImage.getContrast(), myImage.getBrightness())));
 
     }
 
+    /**
+     * This method functions as a View switch. It makes visible the contrast/brightness SeekBars
+     * and makes invisible the filters previews.
+     * @param view which View started this method
+     */
     public void MakeVisibleContrast(View view) {
         slidersLayout.setVisibility(View.VISIBLE);
         int orientation = this.getResources().getConfiguration().orientation;
@@ -533,6 +629,11 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Functions as a View switch = it brings forward the filter previews and makes invisible the contrast
+     * and brightness sliders.
+     * @param view which View started this method
+     */
     public void MakeVisibleFilters(View view){
         slidersLayout.setVisibility(View.INVISIBLE);
         int orientation = this.getResources().getConfiguration().orientation;
@@ -545,39 +646,15 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method enables the buttons that modify bitmap. It is started after any image has been loaded (from camera of gallery)
+     * @param b If b is true = it enables the buttons. If b is false, it doesn't enable the buttons.
+     * @param visibility Sets the visibility value of LinearLayout of filters buttons
+     */
     private void enableAllEditorButtons(boolean b, int visibility ){
         imageButton_filters.setEnabled(b);
         imageButton_contrast.setEnabled(b);
         imageButton_save.setEnabled(b);
         LLfilters.setVisibility(visibility);
     }
-
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
-
 }
